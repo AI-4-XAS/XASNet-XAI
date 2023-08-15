@@ -6,3 +6,24 @@ XASNet is a graph neural network (GNN) model to predict X-ray absorption spectra
 
 To explain the predictions, feature attributions are employed to determine the respective contributions of various atoms in the molecules to the peaks observed in the XAS spectrum. Here, we also developed a method which assigns the ground-truth contributions of various atoms in a molecule to a peak in the TDDFT spectrum. The developed data pipeline produces atoms labels denoting whether a particular atom conztibute to an XAS peak.
 
+### Content
+
++ [Installation](/README.md#installation)
++ [Command-line interface and configuration](/README.md#command-line-interface-and-configuration)
+  + [Model training](/README.md#model-training)
+    + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
+
+
+# Installation
+
+To install `XASNet`, download this repository and use pip.
+For example, the following commands will clone the repository into your current working directory, create a new conda environment called `gschnet`, and install this package as well as all its dependencies (e.g. SchNetPack 2.0, PyTorch, etc.) in the new environment (tested on Ubuntu 20.04):
+
+```
+git clone https://github.com/atomistic-machine-learning/schnetpack-gschnet.git
+conda create -n gschnet numpy
+conda activate gschnet
+pip install ./schnetpack-gschnet
+```
+
+# Command-line interface and configuration
