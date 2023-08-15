@@ -17,7 +17,6 @@ To explain the predictions, feature attributions are employed to determine the r
 # Installation
 
 To install `XASNet`, download this repository and use pip.
-For example, the following commands will clone the repository into your current working directory, create a new conda environment called `gschnet`, and install this package as well as all its dependencies (e.g. SchNetPack 2.0, PyTorch, etc.) in the new environment (tested on Ubuntu 20.04):
 
 ```
 git clone https://github.com/atomistic-machine-learning/schnetpack-gschnet.git

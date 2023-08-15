@@ -1,4 +1,5 @@
-from typing import List
+from __future__ import annotations
+from typing import List, Optional, Any, Dict
 
 import torch
 import torch.nn.functional as F
@@ -23,21 +24,29 @@ gnn_layers = {
     'graphConv': geomnn.GraphConv
     }
 
-class XASNet_GCN(torch.nn.Module):
-    """GCN implementation of XASNet. The class provides multi-layer GCN module.
+class XASNet_GNN(torch.nn.Module):
+    """
+    General implementation of XASNet. The class provides multi-layer GNN 
+    and supports different GNN types e.g. GCN, GATv2, GAT, GraphConv.
 
     Args:
-        torch (_type_): _description_
+        gnn_name: The type of GNN to train including gcn, gatv2, gat, graphconv.  
+        num_layers: Number of GNN layers. 
+        in_channels: List of input channels (same size of layers).
+        out_channels: List of output channels (same size of layers).
+        num_targets: Number of target values (i.e. energy points in the XAS spectra).
+        heads: Number of heads in gat and gatv2.
+        gat_dp: The rate of dropout in case of gat and gatv2.
     """
     def __init__(
         self, 
         gnn_name: str, 
-        in_channels: int,
-        out_channels: int,
+        num_layers: int,
+        in_channels: List[int],
+        out_channels: List[int],
         num_targets: int,
+        heads: Optional[int] = None,
         gat_dp: float = 0,
-        num_layers: int = 1, 
-        heads: int = None,
         ) -> None:
         super().__init__()
         assert gnn_name in gnn_layers
@@ -101,8 +110,10 @@ class XASNet_GCN(torch.nn.Module):
         kaiming_orthogonal_init(self.out.weight.data)
         self.out.bias.data.fill_(0.0)   
 
-    def forward(self, x, 
-              edge_index, batch_seg):   
+    def forward(self, 
+                x: torch.Tensor, 
+                edge_index: torch.Tensor, 
+                batch_seg: torch.Tensor) -> torch.Tensor:   
     
         for layer in self.interaction_layers[:-1]:
             if isinstance(layer, geomnn.MessagePassing):
@@ -120,13 +131,29 @@ class XASNet_GCN(torch.nn.Module):
 
 
 class XASNet_GAT(torch.nn.Module):
+    """
+    More detailed and custom implementation of GAT with different types of GAT layers.
+    The model can get deeper using prelayers and residual layers. Moreover, jumping knowledge mechanism 
+    as an additional layer is applied to focus on important parts of the node's environment.
+
+    Args:
+        node_features_dim: The dimension of node features.
+        num_layers: Number of GNN layers. 
+        in_channels: List of input channels (same size of layers).
+        out_channels: List of output channels (same size of layers).
+        n_heads: Number of heads.
+        targets: Size of the target property (in this case XAS spectra).
+        gat_type: Type of the gat layer.
+        use_residuals: If true, residual layers is used.
+        use_jk: If true, jumping knowledge mechanism is applied.
+    """
     def __init__(
         self, 
         node_features_dim: int,
+        n_layers: int,
         in_channels: List[int],
         out_channels: List[int],
         n_heads: int,
-        n_layers: int,
         targets: int,
         gat_type: str = 'gat_custom',
         use_residuals: bool = False,
@@ -180,7 +207,10 @@ class XASNet_GAT(torch.nn.Module):
         self.dropout = torch.nn.Dropout(p=0.3)
         self.linear_out = LinearLayer(out_channels[-1], targets)
 
-    def forward(self, x, edge_index, batch_seg):
+    def forward(self, 
+                x: torch.Tensor, 
+                edge_index: torch.Tensor, 
+                batch_seg: torch.Tensor) -> torch.Tensor:
 
         x = self.pre_layer(x)
         x = self.res_block(x)
@@ -207,8 +237,18 @@ class XASNet_GAT(torch.nn.Module):
         return out
 
 class XASNet_GraphNet(torch.nn.Module):
+    """
+    GraphNet implementation of XASNet. The global, node and edge states 
+    are used in the messsage function.
+
+    Args:
+        all_params: the parameters of global, node, edge models. The parameters consist of 
+            input, hidden and output channels.
+        n_layers: Number of GraphNet layers.
+        lin_in: Input channels of the linear output layer.
+    """
     def __init__(self,
-                 all_params: dict = None,
+                 all_params: Dict[str, dict],
                  n_layers: int = 3,
                  lin_in: int = 50,
                  n_targets: int = 100):
@@ -234,7 +274,7 @@ class XASNet_GraphNet(torch.nn.Module):
     def reset_parameters(self):
         kaiming_orthogonal_init(self.output_dense.weight.data)
 
-    def forward(self, graph):
+    def forward(self, graph: Any) -> torch.Tensor:
         for graphnet in self.graphnets:
             graph = graphnet(graph)
 
