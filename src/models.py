@@ -1,16 +1,17 @@
+from typing import List
+
 import torch
 import torch.nn.functional as F
 import torch_geometric.nn as geomnn
 
 from utils.weight_init import kaiming_orthogonal_init
 
-from typing import List
 from torch.nn import Linear, LSTM
 from torch_geometric.nn import MessagePassing, global_mean_pool, GATConv, GATv2Conv
-from src.SpectraGAT.base_layers.gat_layers import GATLayerCus, GATv2LayerCus
-from src.SpectraGAT.base_layers.dense_layers import LinearLayer, Residual_block
+from src.XASNet_GAT.base_layers.gat_layers import GATLayerCus, GATv2LayerCus
+from src.XASNet_GAT.base_layers.dense_layers import LinearLayer, Residual_block
 
-from src.GraphNet.modules import GraphNetwork
+from src.XASNet_GraphNet.modules import GraphNetwork
 from torch.nn import ModuleList, Dropout
 from torch_geometric.nn import global_add_pool
 
@@ -22,7 +23,12 @@ gnn_layers = {
     'graphConv': geomnn.GraphConv
     }
 
-class SpectraGNN(torch.nn.Module):
+class XASNet_GCN(torch.nn.Module):
+    """GCN implementation of XASNet. The class provides multi-layer GCN module.
+
+    Args:
+        torch (_type_): _description_
+    """
     def __init__(
         self, 
         gnn_name: str, 
@@ -113,7 +119,7 @@ class SpectraGNN(torch.nn.Module):
 
 
 
-class SpectraGAT(torch.nn.Module):
+class XASNet_GAT(torch.nn.Module):
     def __init__(
         self, 
         node_features_dim: int,
@@ -200,7 +206,7 @@ class SpectraGAT(torch.nn.Module):
         out = self.linear_out(x)
         return out
 
-class SpectraGraphNet(torch.nn.Module):
+class XASNet_GraphNet(torch.nn.Module):
     def __init__(self,
                  all_params: dict = None,
                  n_layers: int = 3,
