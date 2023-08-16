@@ -19,9 +19,7 @@ To explain the predictions, feature attributions are employed to determine the r
 To install `XASNet`, download this repository and use pip.
 
 ```
-git clone https://github.com/atomistic-machine-learning/schnetpack-gschnet.git
-conda create -n gschnet numpy
-conda activate gschnet
+git clone https://github.com/Amirktb1994/XASNet-XAI
 pip install ./schnetpack-gschnet
 ```
 

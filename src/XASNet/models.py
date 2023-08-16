@@ -4,17 +4,16 @@ from typing import List, Optional, Any, Dict
 import torch
 import torch.nn.functional as F
 import torch_geometric.nn as geomnn
-
-from utils.weight_init import kaiming_orthogonal_init
-
 from torch.nn import Linear, LSTM
 from torch_geometric.nn import MessagePassing, global_mean_pool, GATConv, GATv2Conv
-from src.XASNet_GAT.base_layers.gat_layers import GATLayerCus, GATv2LayerCus
-from src.XASNet_GAT.base_layers.dense_layers import LinearLayer, Residual_block
-
-from src.XASNet_GraphNet.modules import GraphNetwork
 from torch.nn import ModuleList, Dropout
 from torch_geometric.nn import global_add_pool
+
+from .utils.weight_init import kaiming_orthogonal_init
+
+from .XASNet_GAT.base_layers.gat_layers import GATLayerCus, GATv2LayerCus
+from .XASNet_GAT.base_layers.dense_layers import LinearLayer, Residual_block
+from .XASNet_GraphNet.modules import GraphNetwork
 
 
 gnn_layers = {
