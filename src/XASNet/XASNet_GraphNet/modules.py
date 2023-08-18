@@ -1,7 +1,7 @@
 import torch
 from torch.nn import ReLU
 from torch_geometric.nn import GATv2Conv, MessagePassing, global_add_pool
-from utils.utils_graphNet import *
+from .base_funcs import *
 
 
 

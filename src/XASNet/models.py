@@ -33,7 +33,8 @@ class XASNet_GNN(torch.nn.Module):
         num_layers: Number of GNN layers. 
         in_channels: List of input channels (same size of layers).
         out_channels: List of output channels (same size of layers).
-        num_targets: Number of target values (i.e. energy points in the XAS spectra).
+        num_targets: Number of target data points in energy axis 
+                of XAS spectrum. Defaults to 100.
         heads: Number of heads in gat and gatv2.
         gat_dp: The rate of dropout in case of gat and gatv2.
     """
@@ -141,7 +142,8 @@ class XASNet_GAT(torch.nn.Module):
         in_channels: List of input channels (same size of layers).
         out_channels: List of output channels (same size of layers).
         n_heads: Number of heads.
-        targets: Size of the target property (in this case XAS spectra).
+        targets: Number of target data points in energy axis 
+                of XAS spectrum. Defaults to 100.
         gat_type: Type of the gat layer.
         use_residuals: If true, residual layers is used.
         use_jk: If true, jumping knowledge mechanism is applied.
@@ -239,27 +241,73 @@ class XASNet_GraphNet(torch.nn.Module):
     """
     GraphNet implementation of XASNet. The global, node and edge states 
     are used in the messsage function.
-
-    Args:
-        all_params: the parameters of global, node, edge models. The parameters consist of 
-            input, hidden and output channels.
-        n_layers: Number of GraphNet layers.
-        lin_in: Input channels of the linear output layer.
     """
     def __init__(self,
-                 all_params: Dict[str, dict],
+                 node_dim: int,
+                 edge_dim: int,
+                 hidden_channels: int,
+                 out_channels: int,
+                 gat_in: int,
+                 gat_hidd: int,
+                 gat_out: int,
                  n_layers: int = 3,
-                 lin_in: int = 50,
                  n_targets: int = 100):
+        """
+        Args:
+            node_dim (int): Dimension of the nodes' attribute in the graph data.
+            edge_dim (int): Dimension of the edges' attribute in the graph data.
+            hidden_channels (int): Hidden channels in GraphNet layers.
+            out_channels (int): Output channels in GraphNet layers.
+            gat_in (int): Input channels for GAT layer used to obtain 
+                the global state of each input graph.
+            gat_hidd (int): Hidden channels for GAT layer used to obtain 
+                the global state of each input graph.
+            gat_out (int): Output channels for GAT layer used to obtain 
+                the global state of each input graph.
+            n_layers (int, optional): Number of layers in GraphNet. Defaults to 3.
+            n_targets (int, optional): Number of target data points in energy axis 
+                of XAS spectrum. Defaults to 100.
+        """
         super().__init__()
-        assert len(all_params) == n_layers, "parameters should be provided \
-            according to number of layers"
-        
-        #necassary_inputs = ["feat_in", "feat_hidd", "feat_out"]
+        assert len(n_layers) > 0
 
-        #for v in all_params.values():
-         #   assert list(v.keys()) == necassary_inputs
+        #preparing the parameters for global, node and edge models 
+        feat_in_node = node_dim + 2*edge_dim + gat_out
+        feat_in_edge = 2*out_channels + edge_dim + gat_out
+        feat_in_glob = 2*out_channels + gat_out
+        node_model_params0 = {"feat_in": feat_in_node, 
+                              "feat_hidd": hidden_channels, 
+                              "feat_out": out_channels}  
+        edge_model_params0 = {"feat_in": feat_in_edge, 
+                              "feat_hidd": hidden_channels, 
+                              "feat_out": out_channels} 
+        global_model_params0 = {"feat_in": feat_in_glob, 
+                                "feat_hidd": hidden_channels, 
+                                "feat_out": out_channels}
+
+        all_params = {"graphnet0": {"node_model_params": node_model_params0,
+            "edge_model_params": edge_model_params0,
+            "global_model_params": global_model_params0,
+            "gat_in": gat_in,
+            "gat_hidd": gat_hidd,
+            "gat_out": gat_out}}
         
+        for i in range(1, n_layers):
+            all_params[f"graphnet{i}"] = {
+                "node_model_params": {"feat_in": 4*out_channels, 
+                                      "feat_hidd": hidden_channels, 
+                                      "feat_out": out_channels},
+                "edge_model_params": {"feat_in": 4*out_channels, 
+                                      "feat_hidd": hidden_channels, 
+                                      "feat_out": out_channels},
+                "global_model_params": {"feat_in": 3*out_channels, 
+                                      "feat_hidd": hidden_channels, 
+                                      "feat_out": out_channels},
+                "gat_in": gat_in,
+                "gat_hidd": gat_hidd,
+                "gat_out": gat_out
+                }
+            
         graphnets = []
         for v in all_params.values():
             graphnets.append(GraphNetwork(**v))
@@ -267,7 +315,7 @@ class XASNet_GraphNet(torch.nn.Module):
         self.graphnets = ModuleList(graphnets)
 
         self.dropout = Dropout(p=0.3)
-        self.output_dense = Linear(lin_in, n_targets)
+        self.output_dense = Linear(out_channels, n_targets)
         self.reset_parameters()
 
     def reset_parameters(self):
