@@ -247,7 +247,6 @@ class XASNet_GraphNet(torch.nn.Module):
                  edge_dim: int,
                  hidden_channels: int,
                  out_channels: int,
-                 gat_in: int,
                  gat_hidd: int,
                  gat_out: int,
                  n_layers: int = 3,
@@ -258,8 +257,6 @@ class XASNet_GraphNet(torch.nn.Module):
             edge_dim (int): Dimension of the edges' attribute in the graph data.
             hidden_channels (int): Hidden channels in GraphNet layers.
             out_channels (int): Output channels in GraphNet layers.
-            gat_in (int): Input channels for GAT layer used to obtain 
-                the global state of each input graph.
             gat_hidd (int): Hidden channels for GAT layer used to obtain 
                 the global state of each input graph.
             gat_out (int): Output channels for GAT layer used to obtain 
@@ -288,7 +285,7 @@ class XASNet_GraphNet(torch.nn.Module):
         all_params = {"graphnet0": {"node_model_params": node_model_params0,
             "edge_model_params": edge_model_params0,
             "global_model_params": global_model_params0,
-            "gat_in": gat_in,
+            "gat_in": node_dim,
             "gat_hidd": gat_hidd,
             "gat_out": gat_out}}
         
@@ -303,7 +300,7 @@ class XASNet_GraphNet(torch.nn.Module):
                 "global_model_params": {"feat_in": 3*out_channels, 
                                       "feat_hidd": hidden_channels, 
                                       "feat_out": out_channels},
-                "gat_in": gat_in,
+                "gat_in": node_dim,
                 "gat_hidd": gat_hidd,
                 "gat_out": gat_out
                 }

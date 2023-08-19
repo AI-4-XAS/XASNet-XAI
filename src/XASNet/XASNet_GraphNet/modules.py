@@ -6,6 +6,10 @@ from .base_funcs import *
 
 
 class GATEncoder(torch.nn.Module):
+    """
+    Encoder layer to obtain the global state of each input graph.
+    The global state will be 
+    """
     def __init__(self, 
     in_feat=11, 
     hidd_feat=64, 
