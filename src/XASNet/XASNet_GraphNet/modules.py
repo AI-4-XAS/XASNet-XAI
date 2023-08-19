@@ -1,3 +1,4 @@
+from typing import Any, Dict
 import torch
 from torch.nn import ReLU
 from torch_geometric.nn import GATv2Conv, MessagePassing, global_add_pool
@@ -10,12 +11,25 @@ class GATEncoder(torch.nn.Module):
     Encoder layer to obtain the global state of each input graph.
     The global state will be 
     """
-    def __init__(self, 
-    in_feat=11, 
-    hidd_feat=64, 
-    out_feat=20, 
-    n_layers=3, 
-    heads=3):
+    def __init__(
+        self, 
+        in_feat: int, 
+        hidd_feat: int, 
+        out_feat: int, 
+        n_layers: int = 3, 
+        heads: int = 3
+        ):
+        """
+        Args:
+            in_feat (int): Input channels for GAT layer used to obtain 
+                the global state of each input graph.
+            hidd_feat (int): Hidden channels for GAT layer used to obtain 
+                the global state of each input graph.
+            out_feat (int): Output channels for GAT layer used to obtain 
+                the global state of each input graph.
+            n_layers (int, optional): Number of GAT layers. Defaults to 3.
+            heads (int, optional): Number of heads in each GAT layer. Defaults to 3.
+        """
         super(GATEncoder, self).__init__()
         gats = []
         for i in range(n_layers):
@@ -45,16 +59,31 @@ class GATEncoder(torch.nn.Module):
         return out
 
 class BaseModel(torch.nn.Module):
+    """
+    Base model for node, edge and global models
+    """
     def __init__(
         self,
-        feat_in=None,
-        feat_out=16,
-        feat_hidd=64,
-        activate_final=True,
-        normalize=True,
-        independant=False,
+        feat_in: int,
+        feat_hidd: int,
+        feat_out: int,
+        activate_final: bool = True,
+        normalize: bool = True,
+        independant: bool = False,
         **kwargs
     ):
+        """
+        Args:
+            feat_in (int): Input channels.
+            feat_hidd (int): Hidden channels 
+            feat_out (int): Output channels
+            activate_final (bool, optional): If true, ReLU activation layer is added
+                to the final linear layer. Defaults to True.
+            normalize (bool, optional): If true, layer normalisation is applied at the end.
+                Defaults to True.
+            independant (bool, optional): If true, the dependancy of node, edge and global is 
+                not applied to node and edge models. Defaults to False.
+        """
         super(BaseModel, self).__init__()
         self.independant = independant
         self.kwargs = kwargs
@@ -82,7 +111,21 @@ class BaseModel(torch.nn.Module):
         return self.mlp(attrs)
 
 class NodeModel(BaseModel):
-    def collect_attrs(self, graph, global_attr):
+    """
+    Node model class to update the node state either independant or 
+    by including edge and global graph states.
+    """
+    def collect_attrs(
+            self, 
+            graph: Any, 
+            global_attr: torch.Tensor
+            ) -> torch.Tensor:
+        """
+        Function to apply the dependancies of node, edge and global states.
+        Args:
+            graph (Any): Graph data.
+            global_attr (torch.Tensor): Global attributions obtained from GATEncoder.
+        """
         if self.independant:
             return [graph.x]
         
@@ -107,7 +150,21 @@ class NodeModel(BaseModel):
         return graph
 
 class EdgeModel(BaseModel):
-    def collect_attrs(self, graph, global_attr):
+    """
+    Edge model class to update the edge state either independant or 
+    by including edge and global graph states.
+    """
+    def collect_attrs(self, 
+            graph: Any, 
+            global_attr: torch.Tensor
+            ) -> torch.Tensor:
+        """
+        Function to apply the dependancies of node, edge and global states.
+        Args:
+            graph (Any): Graph data.
+            global_attr (torch.Tensor): Global attributions obtained from GATEncoder.
+        """
+
         if self.independant:
             return [graph.edge_attr]
 
@@ -133,7 +190,21 @@ class EdgeModel(BaseModel):
         return graph
 
 class GlobalModel(BaseModel):
-    def collect_attrs(self, graph, global_attr):
+    """
+    Global model class to update the global state either independant or 
+    by including edge and global graph states.
+    """
+    def collect_attrs(
+            self, 
+            graph: Any, 
+            global_attr: torch.Tensor
+            ) -> torch.Tensor:
+        """
+        Function to apply the dependancies of node, edge and global states.
+        Args:
+            graph (Any): Graph data.
+            global_attr (torch.Tensor): Global attributions obtained from GATEncoder.
+        """
         node_attr, edge_attr, edge_index, batch = graph.x, graph.edge_attr, \
             graph.edge_index, graph.batch
         
@@ -154,21 +225,40 @@ class GlobalModel(BaseModel):
 
     
 class GraphNetwork(torch.nn.Module):
-    def __init__(self,
-     node_model_params,
-     edge_model_params,
-     global_model_params,
-     gat_in=11, 
-     gat_hidd=64,
-     gat_out=20):
-     super(GraphNetwork, self).__init__()
+    """
+    GraphNetwork layer that updates node, edge and global 
+    states based on their dependancies.
+    """
+    def __init__(
+        self,
+        node_model_params: Dict[str, int],
+        edge_model_params: Dict[str, int],
+        global_model_params: Dict[str, int],
+        gat_in: int, 
+        gat_hidd: int,
+        gat_out: int
+        ):
+        """
+        Args:
+            node_model_params (Dict[str, int]): Parameters for NodeModel.
+            edge_model_params (Dict[str, int]): Parameters for EdgeModel.
+            global_model_params (Dict[str, int]): Parameters for GlobalModel.
+            gat_in (int): Input channels of GATEncoder (to obtain global state).
+            gat_hidd (int): Hidden channels of GATEncoder.
+            gat_out (int): Output channels of GATEncoder.
+        """
+        super(GraphNetwork, self).__init__()
 
-     self.gatencoder = GATEncoder(gat_in, gat_hidd, gat_out)
-     self.node_model = NodeModel(**node_model_params)
-     self.edge_model = EdgeModel(**edge_model_params)
-     self.global_model = GlobalModel(**global_model_params)
+        self.gatencoder = GATEncoder(gat_in, gat_hidd, gat_out)
+        self.node_model = NodeModel(**node_model_params)
+        self.edge_model = EdgeModel(**edge_model_params)
+        self.global_model = GlobalModel(**global_model_params)
 
-    def forward(self, graph, concat_graph=None):
+    def forward(
+        self, 
+        graph: Any, 
+        concat_graph: bool = None
+        ) -> Any:
         try:
             graph_attr = graph.u
         except AttributeError:
