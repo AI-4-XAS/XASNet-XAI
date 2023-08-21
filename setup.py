@@ -27,10 +27,10 @@ setup(
         "torch_geometric",
         "numpy",
         "pandas",
+        "scipy",
         "ase>=3.21",
         "scikit-learn",
         "tqdm",
-        "scipy",
         "rdkit",
     ],
 )
