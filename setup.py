@@ -26,6 +26,7 @@ setup(
         "torch>=1.12",
         "torch_geometric",
         "numpy",
+        "pandas",
         "ase>=3.21",
         "scikit-learn",
         "tqdm",
