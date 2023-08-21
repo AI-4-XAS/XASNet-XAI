@@ -135,7 +135,7 @@ class Contributions():
                  excitations: Dict[str, dict],
                  cam_contr: pd.DataFrame,
                  peak: float,
-                 atom_labels: List[str])
+                 atom_labels: List[str]):
         """
         Args:
             excitations (dict): dictionary of all excitations with mo contributions
