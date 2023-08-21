@@ -27,7 +27,6 @@ setup(
         "torch_geometric",
         "numpy",
         "ase>=3.21",
-        "torch_scatter",
         "scikit-learn",
         "tqdm",
         "scipy",
