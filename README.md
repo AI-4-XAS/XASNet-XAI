@@ -20,7 +20,9 @@ To install `XASNet`, download this repository and use pip.
 
 ```
 git clone https://github.com/Amirktb1994/XASNet-XAI
-pip install ./
+conda create -n xasnet-xai numpy
+conda activate xasnet-xai
+pip install ./XASNet-XAI
 ```
 
 # Command-line interface and configuration
