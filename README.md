@@ -20,7 +20,7 @@ To install `XASNet`, download this repository and use pip.
 
 ```
 git clone https://github.com/Amirktb1994/XASNet-XAI
-pip install ./schnetpack-gschnet
+pip install ./
 ```
 
 # Command-line interface and configuration

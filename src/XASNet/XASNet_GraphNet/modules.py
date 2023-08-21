@@ -95,6 +95,7 @@ class BaseModel(torch.nn.Module):
                 act_final=activate_final, normalize=normalize)
         
         #self.encoder = GATEncoder(in_feat=gat_in, out_feat=gat_out)
+        
 
     def collect_attrs(self, graph, global_attr):
         raise NotImplementedError
