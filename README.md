@@ -14,9 +14,14 @@ To explain the predictions, feature attributions are employed to determine the r
     + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
 
 
+## <div align="center">Documentation</div>
+
+Quickstart installation and usage example is given below. Training, prediction and explainability of XAS spectra are given in the example.  
+
+
 # Installation
 
-To install `XASNet`, download this repository and use pip.
+To install `XASNet-XAI`, download this repository and use pip.
 
 ```
 git clone https://github.com/Amirktb1994/XASNet-XAI
@@ -25,4 +30,4 @@ conda activate xasnet-xai
 pip install ./XASNet-XAI
 ```
 
-# Command-line interface and configuration
+# Python
