@@ -6,18 +6,18 @@ XASNet is a graph neural network (GNN) model to predict X-ray absorption spectra
 
 To explain the predictions, feature attributions are employed to determine the respective contributions of various atoms in the molecules to the peaks observed in the XAS spectrum. Here, we also developed a method which assigns the ground-truth contributions of various atoms in a molecule to a peak in the TDDFT spectrum. The developed data pipeline produces atoms labels denoting whether a particular atom conztibute to an XAS peak.
 
-### Content
-
-+ [Installation](/README.md#installation)
-+ [Command-line interface and configuration](/README.md#command-line-interface-and-configuration)
-  + [Model training](/README.md#model-training)
-    + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
-
 
 ## <div align="center">Documentation</div>
 
 Quickstart installation and usage example is given below. Training, prediction and explainability of XAS spectra are given in the example.  
 
+
+### Content
+
++ [Installation](/README.md#installation)
++ [Python](/README.md#Python)
+  + [Model training](/README.md#model-training)
+    + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
 
 # Installation
 
