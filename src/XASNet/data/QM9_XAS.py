@@ -187,12 +187,12 @@ class QM9_XAS(Dataset):
 
         return self.data_list
     
-    def __len__(self):
+    def len(self):
         return len(self.data_list)
     
     def get(self):
         pass
-    
+
     def __getitem__(self, idx):
         if isinstance(idx, (int, np.int32, np.int64)):
             data = self.data_list[idx] 
