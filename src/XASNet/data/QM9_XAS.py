@@ -64,9 +64,19 @@ class QM9_XAS(Dataset):
         return [osp.join(self.dir, f) for f in files]
 
     def download(self):
-        file_path = download_url(self.raw_url, folder=self.dir)
-        extract_zip(file_path, folder=self.dir)
-        os.unlink(file_path)
+        try:
+            import rdkit  # noqa
+            file_path = download_url(self.raw_url, self.raw_dir)
+            extract_zip(file_path, self.raw_dir)
+            os.unlink(file_path)
+
+            file_path = download_url(self.raw_url2, self.raw_dir)
+            os.rename(osp.join(self.raw_dir, '3195404'),
+                      osp.join(self.raw_dir, 'uncharacterized.txt'))
+        except ImportError:
+            path = download_url(self.processed_url, self.raw_dir)
+            extract_zip(path, self.raw_dir)
+            os.unlink(path)
 
     @staticmethod
     def collate(
