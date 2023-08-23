@@ -9,7 +9,7 @@ import numpy as np
 import torch
 from torch import Tensor
 
-from torch_geometric.utils import one_hot, scatter
+from torch_geometric.utils import scatter
 
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data.collate import collate
@@ -189,6 +189,9 @@ class QM9_XAS(Dataset):
     
     def __len__(self):
         return len(self.data_list)
+    
+    def get(self):
+        pass
     
     def __getitem__(self, idx):
         if isinstance(idx, (int, np.int32, np.int64)):
