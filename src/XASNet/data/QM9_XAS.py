@@ -3,7 +3,12 @@ from tqdm import tqdm
 import os.path as osp
 from typing import *
 
-from .importer import download_url, extract_zip
+from torch_geometric.data import (
+    Data,
+    InMemoryDataset,
+    download_url,
+    extract_zip,
+)
 
 import numpy as np
 import torch
