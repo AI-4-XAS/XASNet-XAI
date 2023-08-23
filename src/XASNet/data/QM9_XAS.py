@@ -44,7 +44,7 @@ class QM9_XAS(Dataset):
             spectra: List of all spectra for the subset of qm9 structures. 
         """
         self.root = root
-        self.raw_dir = raw_dir
+        self.dir = raw_dir
 
         if not osp.exists(osp.join(raw_dir, 
             self.raw_file_names[0])):
@@ -71,16 +71,16 @@ class QM9_XAS(Dataset):
     def download(self):
         try:
             import rdkit  # noqa
-            file_path = download_url(self.raw_url, self.raw_dir)
-            extract_zip(file_path, self.raw_dir)
+            file_path = download_url(self.raw_url, self.dir)
+            extract_zip(file_path, self.dir)
             os.unlink(file_path)
 
-            file_path = download_url(self.raw_url2, self.raw_dir)
-            os.rename(osp.join(self.raw_dir, '3195404'),
-                      osp.join(self.raw_dir, 'uncharacterized.txt'))
+            file_path = download_url(self.raw_url2, self.dir)
+            os.rename(osp.join(self.dir, '3195404'),
+                      osp.join(self.dir, 'uncharacterized.txt'))
         except ImportError:
-            path = download_url(self.processed_url, self.raw_dir)
-            extract_zip(path, self.raw_dir)
+            path = download_url(self.processed_url, self.dir)
+            extract_zip(path, self.dir)
             os.unlink(path)
 
     @staticmethod
