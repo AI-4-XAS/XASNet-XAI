@@ -9,7 +9,7 @@ import numpy as np
 import torch
 from torch import Tensor
 
-from torch_scatter import scatter
+from torch_geometric.utils import one_hot, scatter
 
 from torch_geometric.data import Data, Dataset
 from torch_geometric.data.collate import collate
