@@ -44,7 +44,7 @@ class QM9_XAS(Dataset):
             spectra: List of all spectra for the subset of qm9 structures. 
         """
         self.root = root
-        self.dir = raw_dir
+        self.raw_dir = raw_dir
 
         if not osp.exists(osp.join(raw_dir, 
             self.raw_file_names[0])):
