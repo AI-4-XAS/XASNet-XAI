@@ -19,24 +19,16 @@ from rdkit.Chem.rdchem import BondType as BT
 from rdkit.Chem.rdchem import HybridizationType
 from rdkit.Chem import rdMolTransforms 
 
-class QM9_SpecData(Dataset):
+class QM9_XAS(Dataset):
     """
     The QM9-XAS dataset. The dataset is similar to the original QM9 dataset 
     with addition of XAS spectra as the labels of graphs.
-
-    """
+    """ 
     raw_url = ('https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/'
                'molnet_publish/qm9.zip')
-  
-    __isfrozen = False
-    def __setattr__(self, key, value):
-            if self.__isfrozen and not hasattr(self, key):
-                raise TypeError()
-            object.__setattr__(self, key, value)
+    raw_url2 = 'https://ndownloader.figshare.com/files/3195404'
+    processed_url = 'https://data.pyg.org/datasets/qm9_v3.zip'
 
-    def _freeze(self):
-        self.__isfrozen = True
-        
     def __init__(self, root: str, 
                  raw_dir: str, 
                  spectra: List[Tensor] = None):
@@ -48,19 +40,16 @@ class QM9_SpecData(Dataset):
         """
         self.root = root
         self.dir = raw_dir
-        
-        #if not osp.exists(osp.join(raw_dir, 
-         #   self.raw_file_names[0])) and not osp.exists(root):
-          #  self.download()
-            
+
+        if not osp.exists(osp.join(raw_dir, 
+            self.raw_file_names[0])):
+            self.download()
+           
         if osp.exists(root):
             self.data_list = torch.load(root)
         else:
-            #self.download()
             self.spectra = spectra
             self.process()
-        
-        self._freeze()
 
     @property
     def raw_file_names(self) -> List[str]:
