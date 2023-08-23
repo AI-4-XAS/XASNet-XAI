@@ -1,2 +1,2 @@
-from .QM9_SpecData import *
+from .QM9_XAS import *
 from .split import *

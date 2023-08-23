@@ -20,14 +20,11 @@ from rdkit.Chem.rdchem import HybridizationType
 from rdkit.Chem import rdMolTransforms 
 
 class QM9_SpecData(Dataset):
-    """The QM9 dataset with spectra as the labels.
-
-    Args:
-        root: the path to save the processed data
-        raw_dir: the directory of raw qm9 data
-        spectra: list of all spectra for the subset of qm9 structures 
     """
+    The QM9-XAS dataset. The dataset is similar to the original QM9 dataset 
+    with addition of XAS spectra as the labels of graphs.
 
+    """
     raw_url = ('https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/'
                'molnet_publish/qm9.zip')
   
@@ -43,6 +40,12 @@ class QM9_SpecData(Dataset):
     def __init__(self, root: str, 
                  raw_dir: str, 
                  spectra: List[Tensor] = None):
+        """
+        Args:
+            root: The path to save the processed data.
+            raw_dir: The directory of raw qm9 data.
+            spectra: List of all spectra for the subset of qm9 structures. 
+        """
         self.root = root
         self.dir = raw_dir
         
@@ -163,11 +166,14 @@ class QM9_SpecData(Dataset):
             num_hs = scatter(hs[row], col, dim_size=N).tolist()
 
             #calculate pairwise distances
-            #idx_t, idx_s = edge_index[0], edge_index[1]
+            idx_t, idx_s = edge_index[0], edge_index[1]
             V_ts = pos[:, None, :] - pos[None, :, :]
-            D_ij = np.linalg.norm(np.linalg.norm(V_ts, axis=1), axis=1) 
-            D_ij = torch.tensor(D_ij, dtype=torch.float)
-            D_ij = (D_ij - D_ij.min()) / (D_ij.max() - D_ij.min())
+            D_ij = torch.sqrt(torch.sum(V_ts**2, dim=1))
+            #D_ij = (D_ij - D_ij.min()) / (D_ij.max() - D_ij.min())
+            
+            #V_ts = pos[:, None, :] - pos[None, :, :]
+            #D_ij = np.linalg.norm(np.linalg.norm(V_ts, axis=1), axis=1) 
+            #D_ij = torch.tensor(D_ij, dtype=torch.float)
             #D_ij = (D_ij - torch.mean(D_ij)) / torch.std(D_ij)
 
             x1 = torch.nn.functional.one_hot(
@@ -176,7 +182,7 @@ class QM9_SpecData(Dataset):
             x2 = torch.tensor([atomic_number, aromatic, sp, sp2, sp3, num_hs],
                             dtype=torch.float).t().contiguous()
 
-            x = torch.cat([x1.to(torch.float), x2, D_ij.reshape(-1, 1)], dim=-1)
+            x = torch.cat([x1.to(torch.float), x2, D_ij], dim=-1) 
 
 
             #adding the spectra data to the graph data

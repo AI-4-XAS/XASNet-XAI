@@ -16,8 +16,9 @@ Quickstart installation and usage example is given below. Training, prediction a
 
 + [Installation](/README.md#installation)
 + [Python](/README.md#Python)
-  + [Model training](/README.md#model-training)
-    + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
+  + [Data preparation](/README.md#data-preparation)
+  + [Model training and validation](/README.md#model-training)
+  + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
 
 # Installation
 
