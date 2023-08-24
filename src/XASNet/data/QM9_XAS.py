@@ -39,20 +39,17 @@ class QM9_XAS(Dataset):
                  spectra: List[Tensor] = None):
         """
         Args:
-            root: The path to save the processed data.
+            root: The path to the processed QM9-XAS dataset.
             raw_dir: The directory of raw qm9 data.
             spectra: List of all spectra for the subset of qm9 structures. 
         """
         self.root = root
         self.dir = raw_dir
-
-        if not osp.exists(osp.join(raw_dir, 
-            self.raw_file_names[0])):
-            self.download()
            
         if osp.exists(root):
             self.data_list = torch.load(root)
         else:
+            self.download()
             self.spectra = spectra
             self.process()
 

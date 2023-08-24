@@ -16,7 +16,7 @@ Quickstart installation and usage example is given below. Training, prediction a
 
 + [Installation](/README.md#installation)
 + [Python](/README.md#Python)
-  + [Data preparation](/README.md#data-preparation)
+  + [Dataset preparation](/README.md#dataset-preparation)
   + [Model training and validation](/README.md#model-training)
   + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
 
@@ -32,3 +32,8 @@ pip install ./XASNet-XAI
 ```
 
 # Python
+
+## Dataset preparation
+
+The labels of QM9-XAS dataset (i.e. the XAS spectra) can be downloaded from 
+
