@@ -32,5 +32,6 @@ setup(
         "scikit-learn",
         "tqdm",
         "rdkit",
+        "networkx"
     ],
 )
