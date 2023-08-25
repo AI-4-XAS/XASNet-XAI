@@ -11,8 +11,8 @@ from torch_geometric.nn import global_add_pool
 
 from .utils.weight_init import kaiming_orthogonal_init
 
-from XASNet_GAT.base_layers import *
-from XASNet_GraphNet import GraphNetwork
+from .XASNet_GAT.base_layers import *
+from .XASNet_GraphNet.modules import GraphNetwork
 
 gnn_layers = {
     'gat': geomnn.GATConv,
