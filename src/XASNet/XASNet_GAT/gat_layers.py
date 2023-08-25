@@ -5,7 +5,8 @@ from .dense_layers import LinearLayer, Residual_block
 
 from torch_geometric.nn import MessagePassing
 from torch_geometric.utils import softmax
-import torch_scatter
+#import torch_scatter
+from torch_geometric.utils import scatter
 
 
 class GATLayerCus(MessagePassing):
