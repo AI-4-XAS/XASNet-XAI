@@ -35,5 +35,11 @@ pip install ./XASNet-XAI
 
 ## Dataset preparation
 
-The labels of QM9-XAS dataset (i.e. the XAS spectra) can be downloaded from 
+The raw and processed QM9-XAS dataset can be downloaded form 
+
+The labels of [QM9-XAS dataset](https://doi.org/10.5281/zenodo.8276902) was used for training, validation and test. The labels of graphs in QM9-XAS are the correponding XAS spectra for QM9 structures. Python environment can be used according to the following To prepare the QM9-XAS dataset, 
+
+```python
+
+```
 
