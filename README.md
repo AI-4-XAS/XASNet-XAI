@@ -40,6 +40,8 @@ The raw and processed QM9-XAS dataset can be downloaded form
 The labels of [QM9-XAS dataset](https://doi.org/10.5281/zenodo.8276902) was used for training, validation and test. The labels of graphs in QM9-XAS are the correponding XAS spectra for QM9 structures. Python environment can be used according to the following to prepare the QM9-XAS dataset, 
 
 ```python
+from XASNet.data import QM9_XAS
+
 # load or create QM9-XAS graph dataset
 root = 'path-to-save/load-QM9-XAS-dataset' 
 qm9_spec = QM9_XAS(
