@@ -29,11 +29,11 @@ def spectrum(E: torch.Tensor,
     gE = torch.sum(val, 0)
     return gE
 
-def group_broadening(spectra_stk: List[np.ndarray],
+def batch_broadening(spectra_stk: List[np.ndarray],
                      sigma: float,
                      energies: torch.Tensor) -> List[torch.Tensor]:
     """
-    function to broaden a list of spectra
+    function to broaden a batch of spectra
 
     Args:
         spectra_stk (List[np.ndarray]): List of spectra
