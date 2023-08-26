@@ -24,6 +24,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "torch>=1.12",
+        "torch_scatter",
         "torch_geometric",
         "numpy",
         "pandas",
