@@ -8,7 +8,8 @@ try:
 except ImportError:
     print("torch version is %s. Lazy modules are turned off." % torch.__version__)
 
-from torch_scatter import scatter_sum
+#from torch_scatter import scatter_sum
+from torch_geometric.utils import scatter
 
 
 __all__ = [
