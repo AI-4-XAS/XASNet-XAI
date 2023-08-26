@@ -264,7 +264,7 @@ class XASNet_GraphNet(torch.nn.Module):
                 of XAS spectrum. Defaults to 100.
         """
         super().__init__()
-        assert len(n_layers) > 0
+        assert n_layers > 0
 
         #preparing the parameters for global, node and edge models 
         feat_in_node = node_dim + 2*edge_dim + gat_out
