@@ -203,7 +203,7 @@ class QM9_XAS(Dataset):
         return len(self.data_list)
     
     def len(self):
-        return len(self.data_list)
+        pass
     
     def get(self):
         pass
