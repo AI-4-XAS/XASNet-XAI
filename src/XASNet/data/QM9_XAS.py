@@ -199,6 +199,9 @@ class QM9_XAS(Dataset):
 
         return self.data_list
     
+    def __len__(self):
+        return len(self.data_list)
+    
     def len(self):
         return len(self.data_list)
     
