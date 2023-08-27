@@ -36,7 +36,7 @@ class QM9_XAS(Dataset):
 
     def __init__(self, root: str, 
                  raw_dir: str, 
-                 spectra: List[Tensor] = None):
+                 spectra: List[Tensor] = []):
         """
         Args:
             root: The path to the processed QM9-XAS dataset.
