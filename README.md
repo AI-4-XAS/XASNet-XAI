@@ -136,4 +136,4 @@ cam_contr = contributions.cam_contrs()
 
 # How XASNet-XAI works
 
-![How XASNet-XAI works](./images/XASNet.png)
+![How XASNet-XAI works](./images/ground_truth.png)
