@@ -19,6 +19,7 @@ Quickstart installation and usage example is given below. Training, prediction a
   + [Dataset preparation](/README.md#dataset-preparation)
   + [Model training and validation](/README.md#model-training)
   + [Prediction and explainability with ground truth data](/README.md#prediction-and-explainability-with-ground-truth-data)
++ [How XASNet-XAI works](/README.md#how-xasnet-xai-works)
 
 # Installation
 
@@ -132,3 +133,7 @@ acc, don = contributions.don_acc_contrs()
 cam_contr = contributions.cam_contrs()
 
 ```
+
+# How XASNet-XAI works
+
+![How XASNet-XAI works](./images/XASNet.png)
