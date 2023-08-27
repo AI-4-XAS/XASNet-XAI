@@ -56,3 +56,29 @@ if not osp.exists(root):
 
 ```
 
+## Model training and validation
+
+`GNNTrainer` can be used to train and validate the GNN models. It can also be used for performing XAS spectra predictions with the trained models.
+
+```python
+from XASNet.models import XASNet_GNN
+from XASNet.trainer import GNNTrainer
+
+# load the GNN model
+trainer = GNNTrainer(model=gnn_model, 
+                     model_name="model-name",
+                     device=device,
+                     metric_path="./metrics")
+
+trainer.train_val(
+  train_loader, # train data loader 
+  val_loader, # val data loader
+  optimizer, # optimizer, i.e. AdamW
+  loss_fn, # loss function
+  scheduler, # learning rate scheduler  
+  num_epochs, # number of epochs
+  write_every=1, # frequency to write train/val outcome
+  train_graphnet=True # whether the trained model is GraphNet
+  )
+
+```
