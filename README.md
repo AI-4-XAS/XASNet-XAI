@@ -18,7 +18,7 @@ Quickstart installation and usage example is given below. Training, prediction a
 + [Python](/README.md#Python)
   + [Dataset preparation](/README.md#dataset-preparation)
   + [Model training and validation](/README.md#model-training)
-  + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
+  + [Prediction and explainability with ground truth data](/README.md#prediction-and-explainability-with-ground-truth-data)
 
 # Installation
 
@@ -80,5 +80,23 @@ trainer.train_val(
   write_every=1, # frequency to write train/val outcome
   train_graphnet=True # whether the trained model is GraphNet
   )
+```
+
+## Prediction and explainability with ground truth data
+
+```python
+from XASNet.utils import GraphDataProducer
+from XASNet.utils import (
+    GroundTruthGenerator,
+    OrcaAnlyser,
+    Contributions
+)
+
+# loading test dataset
+root = 'path-to-qm9xas-dataset'
+test_qm9xas = QM9_XAS(root=root,
+             raw_dir='./raw/')
+
+
 
 ```
