@@ -18,7 +18,7 @@ Quickstart installation and usage example is given below. Training, prediction a
 + [Python](/README.md#Python)
   + [Dataset preparation](/README.md#dataset-preparation)
   + [Model training and validation](/README.md#model-training)
-  + [Hyperparameters and experiment settings](/README.md#hyperparameters-and-experiment-settings)
+  + [Prediction and explainability with ground truth data](/README.md#prediction-and-explainability-with-ground-truth-data)
 
 # Installation
 
@@ -80,5 +80,53 @@ trainer.train_val(
   write_every=1, # frequency to write train/val outcome
   train_graphnet=True # whether the trained model is GraphNet
   )
+```
+
+## Prediction and explainability with ground truth data
+
+```python
+from XASNet.utils import GraphDataProducer
+from XASNet.utils import (
+    GroundTruthGenerator,
+    OrcaAnlyser,
+    Contributions
+)
+
+# loading test dataset
+root = 'path-to-qm9xas-dataset'
+test_qm9xas = QM9_XAS(root=root,
+             raw_dir='./raw/')
+
+# picking a graph from test dataset
+mol_idx = 100
+
+graph_picker = GraphDataProducer(
+    model=xasnet_gnn,
+    gnn_type="gatv2",
+    test_data=test_qm9xas,
+    idx_to_pick=mol_idx
+)
+# make prediction with the loaded model 
+graph = graph_picker.picked_graph
+y_true = graph.spectrum
+x_pred, y_pred = graph_picker.predictions()
+
+# explainability based on input graph 
+path_orca_output = 'path-to-orca-raw-output-file'
+path_orca_spectrum = 'path-to-xas-spectrum-output-file'
+
+orca_analyzer = OrcaAnlyser(path_orca_output,
+                            path_orca_spectrum)
+excitations = orca_analyzer.give_excitations()
+contributions = Contributions(
+    excitations, 
+    all_cam_data, 
+    281, 
+    atom_labels
+)
+# obtaining core/virtual contribution of atoms to the peak, in this case 281 eV
+acc, don = contributions.don_acc_contrs()
+# obtaining corresponding cam contributions 
+cam_contr = contributions.cam_contrs()
 
 ```
