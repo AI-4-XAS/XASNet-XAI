@@ -84,7 +84,7 @@ trainer.train_val(
 
 ## Prediction and explainability with ground truth data
 
-The explainibility of Graph predictions works with orca raw output files. The `OrcaAnlyser` class analyse the orca raw output to obtain excited states and orbital contribution of atoms. The `Contributions` class perform final calculations to obtain ground truth atomic contribution to a peak in XAS spectrum.
+The explainibility of XAS predictions works with orca raw output files. The `OrcaAnlyser` class analyse the orca raw output to obtain excited states and orbital contribution of atoms. The `Contributions` class performs final calculations to obtain ground truth atomic contribution to a peak in XAS spectrum.
 
 ```python
 from XASNet.utils import GraphDataProducer
